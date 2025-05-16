@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Form,
   FormControl,
@@ -22,6 +23,9 @@ import { z } from 'zod';
 export const pathPlanningFormSchema = z.object({
   algorithm: z.enum(['RRT', 'RRT*']),
   stepSize: z.coerce.number().min(8).max(32),
+  timeoutMS: z.coerce.number().min(100).max(5000),
+  goalBiasEnabled: z.boolean(),
+  goalBias: z.coerce.number().min(0).max(1),
 });
 
 export default function PathPlanningForm({
@@ -36,6 +40,9 @@ export default function PathPlanningForm({
     defaultValues: {
       algorithm: 'RRT',
       stepSize: 16,
+      timeoutMS: 1000,
+      goalBiasEnabled: false,
+      goalBias: 0.6,
     },
   });
 
@@ -77,6 +84,59 @@ export default function PathPlanningForm({
               <FormLabel>Step Size</FormLabel>
               <FormControl>
                 <Input type="number" {...field} min={8} max={32} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="timeoutMS"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Timeout</FormLabel>
+              <FormControl>
+                <div className="flex">
+                  <Input
+                    type="number"
+                    className="rounded-r-none"
+                    {...field}
+                    min={100}
+                    max={5000}
+                  />
+                  <div className="h-9 px-3 py-1 border border-l-0 rounded-r-lg">
+                    ms
+                  </div>
+                </div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="goalBias"
+          render={({ field }) => (
+            <FormItem>
+              <div className="flex items-center gap-2">
+                <FormLabel className="mb-0">Goal Bias</FormLabel>
+                <FormField
+                  control={form.control}
+                  name="goalBiasEnabled"
+                  render={({ field }) => (
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                  )}
+                />
+              </div>
+              <FormControl>
+                <Input type="number" {...field} min={0} max={1} step={0.01} />
               </FormControl>
               <FormMessage />
             </FormItem>

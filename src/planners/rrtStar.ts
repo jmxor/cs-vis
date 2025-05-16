@@ -1,6 +1,7 @@
 import { Tree, TreeEdge, TreeNode } from '@/lib/tree';
+import { Dispatch, SetStateAction } from 'react';
 
-export default class RRTPlanner {
+export default class RRTStarPlanner {
   tree: Tree;
   start: TreeNode | null = null;
   goal: TreeNode | null = null;
@@ -18,6 +19,7 @@ export default class RRTPlanner {
     goalBiasEnabled: boolean,
     goalBias: number
   ) {
+    start.cost = 0;
     this.start = start;
     this.goal = goal;
     this.tree.clear();
@@ -36,6 +38,7 @@ export default class RRTPlanner {
       if (!qNearest) return goalFound;
 
       const qNew = this.tree.step(qNearest, qRand, stepSize);
+      qNew.cost = qNearest.cost + this.tree.getDistance(qNearest, qNew);
 
       try {
         this.tree.addEdge(qNew, qNearest);
@@ -43,6 +46,8 @@ export default class RRTPlanner {
       } catch (e) {
         continue;
       }
+
+      this.tree.checkAndReconnect(qNew, stepSize);
 
       if (!goalFound && this.tree.getDistance(qNew, goal) < stepSize) {
         this.tree.addEdge(goal, qNew);
@@ -69,6 +74,7 @@ export default class RRTPlanner {
         edge.from.areCoordinatesEqual(currentEdge!.to)
       );
     }
+    pathEdges.push(currentEdge!);
     return pathEdges;
   }
 }
