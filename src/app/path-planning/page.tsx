@@ -16,7 +16,7 @@ const planners = {
 };
 
 export default function PathPlanningPage() {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   const [startNode, setStartNode] = useState(new TreeNode(24, 24));
   const [goalNode, setGoalNode] = useState(new TreeNode(232, 232));
   const [obstacles, setObstacles] = useState<TreeNode[]>([]);
