@@ -1,5 +1,4 @@
 import { Tree, TreeEdge, TreeNode } from '@/lib/tree';
-import { Dispatch, SetStateAction } from 'react';
 
 export default class RRTStarPlanner {
   tree: Tree;
@@ -44,6 +43,7 @@ export default class RRTStarPlanner {
         this.tree.addEdge(qNew, qNearest);
         this.tree.addNode(qNew);
       } catch (e) {
+        console.error('Error adding edge or node:', e);
         continue;
       }
 

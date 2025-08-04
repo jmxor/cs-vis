@@ -41,6 +41,7 @@ export default class RRTPlanner {
         this.tree.addEdge(qNew, qNearest);
         this.tree.addNode(qNew);
       } catch (e) {
+        console.error('Error adding edge or node:', e);
         continue;
       }
 
